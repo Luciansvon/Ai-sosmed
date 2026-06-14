@@ -1,0 +1,21 @@
+# Bot_thread (Ai-sosmed) — standalone Threads autoposter bot
+# Python 3.10+ (dipakai/diuji di 3.12)
+
+# Discord control & approval layer
+discord.py>=2.3
+
+# HTTP (Threads Graph API, Serper, Catbox, agentmemory)
+httpx>=0.27
+
+# Scheduler (auto-post jadwal acak + scan komentar)
+apscheduler>=3.10
+
+# Env loading
+python-dotenv>=1.0
+
+# LLM (draf persona Gen-Z via OpenRouter)
+langchain-core>=0.3
+langchain-openai>=0.2
+
+# Image generation (OpenRouter multimodal)
+openai>=1.12.0
