@@ -17,6 +17,9 @@ outputs/*
 *.log
 logs/
 
+# Temp build/helper scripts
+_*.sh
+
 # OS / editor
 .DS_Store
 .idea/
