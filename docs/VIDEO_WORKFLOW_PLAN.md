@@ -179,8 +179,8 @@ LONG_MAX_SECONDS=120                  # batas mode long
 SHORT_MAX_SECONDS=58                  # batas mode short (aman < 60)
 
 # === STORY ===
-STORY_LLM_MODEL=anthropic/claude-opus-4.8   # naskah (kualitas prosa); via OpenRouter
-DESLOP_LLM_MODEL=anthropic/claude-sonnet-4.6 # tugas ringan (deslop, ekstrak elemen)
+STORY_LLM_MODEL=anthropic/claude-sonnet-4.6  # naskah (hemat + kualitas bagus); via OpenRouter
+DESLOP_LLM_MODEL=deepseek/deepseek-v4-flash   # tugas ringan (deslop, ekstrak elemen) — murah
 STORY_MAX_WORDS_LONG=320              # naskah induk (mode long, ~1-2 mnt)
 STORY_MAX_WORDS_SHORT=150             # turunan shorts (potongan/teaser)
 
@@ -391,14 +391,15 @@ OpenRouter (harga ≈ Anthropic, per 1M token in/out):
 
 | Model | OpenRouter ID | Harga | Catatan |
 |---|---|---|---|
-| **Claude Opus 4.8** | `anthropic/claude-opus-4.8` | $5 / $25 | 🥇 Utama untuk `story_gen` — prosa natural & atmosferik, anti-AI-slop |
-| **Claude Sonnet 4.6** | `anthropic/claude-sonnet-4.6` | $3 / $15 | 🥈 Sangat bagus & murah; sudah dipakai (Threads). Bagus untuk deslop/utility |
+| **Claude Sonnet 4.6** | `anthropic/claude-sonnet-4.6` | $3 / $15 | 🥇 **Dipilih** untuk `story_gen` — kualitas bagus, hemat, sudah dipakai (Threads) |
+| Claude Opus 4.8 | `anthropic/claude-opus-4.8` | $5 / $25 | Prosa lebih atmosferik tapi lebih mahal — opsi upgrade kalau perlu |
 | Claude Haiku 4.5 | `anthropic/claude-haiku-4.5` | $1 / $5 | Terlalu basic untuk naskah; rawan generik |
 | Claude Fable 5 | `anthropic/claude-fable-5` | $10 / $50 | Overkill untuk cerita pendek |
 
-**Rekomendasi:** `story_gen` → **Opus 4.8** (pecahan sen/video). Tugas ringan (deslop,
-ekstrak elemen riset) → **Sonnet 4.6** atau DeepSeek default. Slug persis cek di daftar
-model OpenRouter (format titik/strip bisa beda).
+**Keputusan owner:** `story_gen` → **Sonnet 4.6** (hemat, kualitas tetap bagus). Tugas
+ringan (deslop, ekstrak elemen riset) → **DeepSeek** default (murah). Pluggable via
+`STORY_LLM_MODEL` — bisa naik ke Opus 4.8 kapan pun kalau mau prosa lebih pekat. Slug
+persis cek di daftar model OpenRouter (format titik/strip bisa beda).
 
 ## 16. Horror treatment — bikin gameplay terang jadi mencekam
 
