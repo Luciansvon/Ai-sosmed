@@ -76,7 +76,7 @@ core/ (lanjutan — port dari BIMA_CORE)
   tts.py                 # PORT: wrapper TTS (F5-TTS utama, edge-tts fallback) → narasi.wav
   tts_worker.py          # PORT: subprocess F5-TTS terisolasi (lepas VRAM, aman dari crash CUDA)
 tools/
-  trend_research.py      # scraping referensi (XReach/Jina/Serper) → ekstrak tema/elemen (bukan teks)
+  trend_research.py      # INTAKE brief referensi dari Antigravity (eksternal) → elemen/tema (bukan teks)
   story_gen.py           # naskah horror orisinal via LLM (seed bank + folklore + elemen riset)
   subtitle.py            # faster-whisper align narasi → word/segment timing → .ass burn-in
   gameplay_bg.py         # pilih footage acak, potong sepanjang narasi, crop center 9:16
@@ -179,6 +179,8 @@ LONG_MAX_SECONDS=120                  # batas mode long
 SHORT_MAX_SECONDS=58                  # batas mode short (aman < 60)
 
 # === STORY ===
+STORY_LLM_MODEL=anthropic/claude-opus-4.8   # naskah (kualitas prosa); via OpenRouter
+DESLOP_LLM_MODEL=anthropic/claude-sonnet-4.6 # tugas ringan (deslop, ekstrak elemen)
 STORY_MAX_WORDS_LONG=320              # naskah induk (mode long, ~1-2 mnt)
 STORY_MAX_WORDS_SHORT=150             # turunan shorts (potongan/teaser)
 
@@ -381,6 +383,23 @@ Reference clip buat voice clone narator horror (`assets/voice/`):
 > dipakai sebagai background (100% milik sendiri, aman Content ID) sekaligus **promosi
 > game**-nya. Tinggal rekam mode horror/gelap dari game itu.
 
+## 18. Pilihan model LLM untuk naskah (copywriting)
+
+Volume kecil (5–6 cerita/mgg, ~320 kata ≈ beberapa ribu token) → biaya **nyaris nol**,
+jadi pilih berdasarkan **kualitas prosa** (naskah = penentu lolos monetisasi). Lewat
+OpenRouter (harga ≈ Anthropic, per 1M token in/out):
+
+| Model | OpenRouter ID | Harga | Catatan |
+|---|---|---|---|
+| **Claude Opus 4.8** | `anthropic/claude-opus-4.8` | $5 / $25 | 🥇 Utama untuk `story_gen` — prosa natural & atmosferik, anti-AI-slop |
+| **Claude Sonnet 4.6** | `anthropic/claude-sonnet-4.6` | $3 / $15 | 🥈 Sangat bagus & murah; sudah dipakai (Threads). Bagus untuk deslop/utility |
+| Claude Haiku 4.5 | `anthropic/claude-haiku-4.5` | $1 / $5 | Terlalu basic untuk naskah; rawan generik |
+| Claude Fable 5 | `anthropic/claude-fable-5` | $10 / $50 | Overkill untuk cerita pendek |
+
+**Rekomendasi:** `story_gen` → **Opus 4.8** (pecahan sen/video). Tugas ringan (deslop,
+ekstrak elemen riset) → **Sonnet 4.6** atau DeepSeek default. Slug persis cek di daftar
+model OpenRouter (format titik/strip bisa beda).
+
 ## 16. Horror treatment — bikin gameplay terang jadi mencekam
 
 Prinsip: **horror itu ~70% audio.** Visual cukup di-"gelapin" biar gak ceria; ketegangan
@@ -453,8 +472,12 @@ Alur:
    → story_gen → cerita ORISINAL → Deslop → cek kemiripan thd sumber (opsional)
 ```
 
-**Tools (port dari BIMA_CORE, sudah ada):** XReach (Twitter/X via agent-reach + RapidAPI),
-Jina Reader (web→markdown bersih), Serper (`SERPER_API_KEY` sudah dipakai proyek ini).
+**Scraping di-handle EKSTERNAL via Antigravity (keputusan owner).** Bot **tidak**
+melakukan scraping sendiri — `trend_research.py` jadi **intake**: baca brief referensi
+yang dihasilkan Antigravity (mis. `outputs/trend_brief.json` yang di-drop owner, atau
+input via command). Isinya cuma **elemen/tema** (tren, setting, pola hook), bukan teks
+cerita. Built-in scraper (XReach/Jina/Serper dari BIMA_CORE) jadi **opsional** — fallback
+kalau suatu saat mau scraping internal.
 **Pengaman:** cek similarity output vs sumber biar jaga jarak (hindari near-duplicate).
 
 ### Yang DILARANG jadi sumber langsung
