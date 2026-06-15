@@ -213,7 +213,28 @@ dan bisa diiterasi (kualitas subtitle, ducking audio, pacing) sebelum nyentuh up
 | **TikTok API restriktif** | Sesuai keputusan: TikTok = generate file + upload manual |
 | YouTube OAuth ribet | One-time consent; simpan refresh token di `YOUTUBE_TOKEN_FILE` |
 | Konten horror terlalu ekstrem | Naskah lewat approval gate Discord sebelum publish |
+| **Monetisasi ditolak** (reused/AI-slop) | Naskah orisinal + Deslop + footage no-copyright + disclosure AI (lihat §9b) |
 | edge-tts kadang rate-limit/diblok | Cuma fallback; F5-TTS lokal sebagai utama. Provider lain bisa ditambah (lihat §12) |
+
+## 9b. Monetisasi & kebijakan YouTube (penting)
+
+**Bisa monet?** Ya, Shorts bisa dimonetisasi setelah masuk **YouTube Partner Program**:
+- **1.000 subscriber** + (**10 juta views Shorts / 90 hari** ATAU **4.000 jam tonton / 12 bln**).
+- Shorts dibayar dari pool iklan Shorts (~45% share setelah lisensi musik). **RPM kecil** →
+  cuan dari volume.
+
+**Risiko utama format ini** (AI voice + footage gameplay): kebijakan **"reused / inauthentic /
+mass-produced content"** (diperketat 2025) bisa **menolak monetisasi** kalau dinilai
+konten daur ulang tanpa nilai tambah / produksi massal repetitif.
+
+**Cara lolos (jadikan syarat desain):**
+- ✅ **Naskah orisinal & variatif** — `story_gen` wajib hindari template generik; pakai
+  topic-variety guard (pola `threads_recent_topics.json` sudah ada di BIMA_CORE).
+- ✅ **Reuse Deslop / anti-AI-slop** dari BIMA_CORE biar naskah gak terasa "AI slop".
+- ✅ **Footage no-copyright / rekaman sendiri** (sudah jadi syarat §9).
+- ✅ **Editing berciri** (subtitle, sfx, pacing) + **voice-clone khas** (F5-TTS), bukan TTS robotik.
+- ✅ **Disclosure AI** — set flag "altered/synthetic content" saat upload (lihat `youtube_uploader`).
+- ✅ **Musik bebas-royalti** biar gak kena klaim yang motong revenue.
 
 ## 10. Arsip: opsi AI video gen (masa depan, opsional)
 
