@@ -236,6 +236,21 @@ konten daur ulang tanpa nilai tambah / produksi massal repetitif.
 - ✅ **Disclosure AI** — set flag "altered/synthetic content" saat upload (lihat `youtube_uploader`).
 - ✅ **Musik bebas-royalti** biar gak kena klaim yang motong revenue.
 
+### Audiens, "Made for Kids", & age-restriction
+- **Horror = bukan "Made for Kids"** → tandai **not made for kids** saat upload → iklan
+  personalisasi tetap aktif (revenue lebih baik). `youtube_uploader` set `selfDeclaredMadeForKids=false`.
+- **Jaga advertiser-friendly**: bikin **atmospheric/suspense**, hindari gore eksplisit,
+  jumpscare ekstrem, & tema sensitif (mis. bunuh diri) biar gak kena **age-restriction 18+**
+  / demonetisasi. Approval gate Discord jadi filter terakhir.
+- Audiens horror short-form = remaja–dewasa muda (niche kuat di TikTok/Shorts), bukan anak kecil.
+
+### Implikasi durasi (kenapa pertimbangkan 1–2 menit juga)
+- **YouTube Shorts (<60 dtk)**: monet (RPM kecil), kuat buat **discovery/reach**.
+- **Video 1–2 menit**: RPM YouTube lebih tinggi, DAN **syarat TikTok Creator Rewards**
+  (cuma bayar video **>1 menit**; perlu 10rb follower + 100rb views/30 hari).
+- **Strategi funnel disarankan**: Shorts sebagai umpan algoritma → versi 1–2 menit sebagai
+  sumber revenue utama. Pipeline sama, beda `STORY_MAX_WORDS` + batas durasi per mode.
+
 ## 10. Arsip: opsi AI video gen (masa depan, opsional)
 
 Kalau nanti mau visual yang benar-benar "AI-generated" (bukan gameplay), jalur gratisnya:
