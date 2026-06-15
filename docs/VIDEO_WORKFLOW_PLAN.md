@@ -370,11 +370,11 @@ Reference clip buat voice clone narator horror (`assets/voice/`):
   Scheduler: ~1/hari tapi **skip 1–2 hari/minggu** (acak/akhir pekan). Workflow **low-touch**:
   generate → preview ke DM → approve 1-tap. Opsi AFK auto-publish utk konten SAFE
   (pola scheduler Threads, timeout 5 mnt) biar gak nyangkut.
+- ✅ **Sumber cerita**: LLM ngarang **orisinal** dari **seed bank** (premis) + **folklore
+  Indonesia** (public domain). Submission penonton ditambah belakangan. Detail §17.
 - 🟡 **Default sementara (bisa diubah)**:
   - **Musik/ambient**: di-kurasi dari sumber bebas-royalti (YouTube Audio Library, Pixabay,
     Freesound CC0). Aku siapin rekomendasi pas Fase 1.
-  - **Ide cerita**: murni LLM + topic-variety guard + batasan §13. Seed manual (mis.
-    "pengalaman pembaca" dari komentar) ditambah belakangan via command opsional.
 
 > 💡 **Bonus footage**: karena owner bikin **game Roblox sendiri**, gameplay-nya bisa
 > dipakai sebagai background (100% milik sendiri, aman Content ID) sekaligus **promosi
@@ -418,6 +418,35 @@ colorbalance=rs=-0.03:bs=0.05      # sedikit dingin/teal
 > Env terkait (di-tune saat Fase 1): `HORROR_GRADE=true`, `GRADE_SATURATION=0.35`,
 > `GRADE_BRIGHTNESS=-0.06`, `VIGNETTE=true`, `GRAIN=12`, `AMBIENT_VOLUME=0.15`,
 > `VOICE_REVERB=true`, `VOICE_PITCH=-2`.
+
+## 17. Sumber & orisinalitas cerita
+
+**Prinsip wajib:** naskah harus **orisinal** (syarat monetisasi §9b). "Sumber" = bahan
+mentah/inspirasi yang di-LLM jadi cerita baru — **bukan** menyalin karya orang.
+
+### Strategi (urut prioritas)
+1. **Seed bank premis (utama, low-effort).** File `core/horror_seeds.json` (pola
+   `scientific_facts.json` yang sudah ada): kumpulan **setting + entitas + twist**. `story_gen`
+   ambil + recombine jadi cerita orisinal. Contoh seed:
+   - "kos lama, penghuni lantai 3 yang tak pernah keluar"
+   - "ojol dapat orderan ke alamat yang tak ada di peta"
+   - "video CCTV toko menampilkan pelanggan yang tak pernah masuk"
+2. **Folklore / urban legend Indonesia (public domain).** Pocong, kuntilanak, Suster
+   Ngesot, Jelangkung, Nyi Roro Kidul, Hantu Jeruk Purut → LLM **reimagine** jadi cerita baru.
+   Relate & viral untuk audiens ID.
+3. **Submission penonton ("pengalaman pembaca").** Via komentar/DM/Form → seed orisinal +
+   engagement tinggi. Butuh basis penonton dulu → **fase lanjut** (command/intake opsional).
+
+### Yang DILARANG jadi sumber langsung
+❌ Thread Twitter/X (mis. gaya SimpleMan/KKN), Reddit r/nosleep, creepypasta berhak cipta.
+Boleh untuk inspirasi tema, **tidak boleh disalin** (risiko strike + tolak monetisasi).
+
+### Jaga variasi & anti-slop
+- **Topic-variety guard** (pola `threads_recent_topics.json`): catat seed/subjek terpakai,
+  feed sebagai exclusion list → gak ngulang tema.
+- **Deslop** (port BIMA_CORE): buang klise AI & frasa generik biar naskah terasa manusiawi.
+
+> Default Fase 1: sumber #1 + #2 (seed bank + folklore). #3 menyusul.
 
 ---
 *Setelah Fase 1 disetujui & ada ≥1 file di `assets/gameplay/` + reference voice di
