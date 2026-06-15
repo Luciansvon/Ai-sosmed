@@ -366,9 +366,10 @@ Reference clip buat voice clone narator horror (`assets/voice/`):
 - ✅ **Suara**: F5-TTS voice clone (reference voice dicari nanti, spek §15).
 - ✅ **Footage**: rekam sendiri (rekomendasi Subway Surfers / Minecraft, §14).
 - ✅ **Tone visual**: **Hybrid** — gameplay di-grade gelap + audio design kuat (§16).
-- ✅ **Cadence**: **1 video/hari** (owner sibuk magang + project Roblox) → workflow harus
-  **low-touch**: scheduler generate 1/hari → preview ke DM → approve 1-tap. Opsi AFK
-  auto-publish utk konten SAFE (pola scheduler Threads, timeout 5 mnt) biar gak nyangkut.
+- ✅ **Cadence**: **5–6 video/minggu** (owner sibuk magang + project Roblox; ada hari libur).
+  Scheduler: ~1/hari tapi **skip 1–2 hari/minggu** (acak/akhir pekan). Workflow **low-touch**:
+  generate → preview ke DM → approve 1-tap. Opsi AFK auto-publish utk konten SAFE
+  (pola scheduler Threads, timeout 5 mnt) biar gak nyangkut.
 - 🟡 **Default sementara (bisa diubah)**:
   - **Musik/ambient**: di-kurasi dari sumber bebas-royalti (YouTube Audio Library, Pixabay,
     Freesound CC0). Aku siapin rekomendasi pas Fase 1.
