@@ -16,7 +16,7 @@ rapuh di free tier.
 |---|---|---|
 | Tema konten | **Horror** — semua sub-genre yang mencekam (urban legend lokal, pengalaman pembaca, creepypasta/misteri, horor psikologis) **dalam batas aman iklan** (§13) | Prompt LLM multi-genre + guardrail konten |
 | Durasi | **Funnel**: 1 naskah induk **long (1–2 mnt)** → turunan **Shorts (<60 dtk)** | Bukan duplikat; Shorts narik, long buat duit (lihat §9b) |
-| Visual | **Footage gameplay** sebagai latar (bukan AI video gen) | Gratis, ringan; **rekam sendiri** (Minecraft) biar 100% aman hak cipta (§14) |
+| Visual | **Footage gameplay di-grade gelap** (hybrid) — moody, bukan terang | Retensi + atmosfer; treatment ffmpeg + audio design (§16) |
 | Voiceover | **F5-TTS** (finetune Indo, voice clone) + **edge-tts** fallback | Reuse pipeline BIMA_CORE; F5 butuh GPU/CUDA, edge-tts jalan tanpa GPU. Reference voice TBD (§15) |
 | Subtitle | Burn-in sinkron (karaoke-style) | Timing via **faster-whisper** (sudah ada di stack BIMA) — bukan dari word-boundary TTS |
 | Upload | **Auto YouTube, manual TikTok** | YouTube Data API v3; TikTok = file siap |
@@ -79,7 +79,7 @@ tools/
   story_gen.py           # naskah horror via LLM (hook 3 dtk pertama, ending nge-twist)
   subtitle.py            # faster-whisper align narasi → word/segment timing → .ass burn-in
   gameplay_bg.py         # pilih footage acak, potong sepanjang narasi, crop center 9:16
-  video_assembly.py      # ffmpeg: gabung bg + subtitle + narasi + ambient → MP4 9:16
+  video_assembly.py      # ffmpeg: horror-grade bg + subtitle + narasi + ambient → MP4 9:16
 outputs/
   video/                 # hasil render + artefak antara (auto-prune)
 assets/
@@ -365,8 +365,48 @@ Reference clip buat voice clone narator horror (`assets/voice/`):
 - ✅ **Sub-genre**: semua yang mencekam, dalam batas §13.
 - ✅ **Suara**: F5-TTS voice clone (reference voice dicari nanti, spek §15).
 - ✅ **Footage**: rekam sendiri (rekomendasi Subway Surfers / Minecraft, §14).
+- ✅ **Tone visual**: **Hybrid** — gameplay di-grade gelap + audio design kuat (§16).
 - ⬜ **Masih terbuka**: cadence posting (brp video/hari), pilihan musik/ambient, dan
   apakah ide cerita murni LLM atau ada seed dari user (mis. komentar "pengalaman pembaca").
+
+## 16. Horror treatment — bikin gameplay terang jadi mencekam
+
+Prinsip: **horror itu ~70% audio.** Visual cukup di-"gelapin" biar gak ceria; ketegangan
+sebenarnya dibangun dari sound design. Dua lapis:
+
+### 16a. Visual grade (ffmpeg, di `video_assembly`)
+Ubah footage terang (Subway Surfers dll) jadi moody:
+- **Desaturate** — kurangi warna (mendekati abu-abu, gak full B/W).
+- **Brightness/contrast turun** — lebih gelap & "berat".
+- **Vignette** — pinggir gelap, fokus ke tengah.
+- **Film grain** — tekstur kotor/analog.
+- **Cold/teal shift** (opsional) — nuansa dingin gak nyaman.
+- **Slight blur/sharpen mix** (opsional) — sedikit dreamlike.
+
+Contoh filterchain (acuan, di-tune nanti):
+```
+eq=saturation=0.35:brightness=-0.06:contrast=1.12,
+vignette=PI/4,
+noise=alls=12:allf=t,
+colorbalance=rs=-0.03:bs=0.05      # sedikit dingin/teal
+```
+
+### 16b. Audio design (nyawa horror-nya)
+- **Ambient drone** rendah jalan terus di latar (volume ~12–18%).
+- **Sidechain ducking** — ambient/musik otomatis turun saat narator bicara.
+- **Reverb tipis** di voice → kesan ruang/jarak, lebih mencekam.
+- **Sudden silence + sting** di momen klimaks (cut ambient sepersekian detik lalu hentakan).
+- **SFX layer** opsional: heartbeat, bisikan, whoosh, jumpscare wajar (gak ekstrem).
+- **Voice**: F5-TTS nada rendah-pelan; bisa turunkan pitch sedikit via ffmpeg.
+
+### 16c. Pacing & subtitle
+- Hook 3 detik pertama langsung ke bagian paling janggal/pertanyaan.
+- Subtitle 1–3 kata/baris, muncul sinkron (karaoke), font tegas kontras tinggi.
+- Jeda dramatis sebelum reveal; jangan buru-buru.
+
+> Env terkait (di-tune saat Fase 1): `HORROR_GRADE=true`, `GRADE_SATURATION=0.35`,
+> `GRADE_BRIGHTNESS=-0.06`, `VIGNETTE=true`, `GRAIN=12`, `AMBIENT_VOLUME=0.15`,
+> `VOICE_REVERB=true`, `VOICE_PITCH=-2`.
 
 ---
 *Setelah Fase 1 disetujui & ada ≥1 file di `assets/gameplay/` + reference voice di
