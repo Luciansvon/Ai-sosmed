@@ -366,8 +366,18 @@ Reference clip buat voice clone narator horror (`assets/voice/`):
 - ✅ **Suara**: F5-TTS voice clone (reference voice dicari nanti, spek §15).
 - ✅ **Footage**: rekam sendiri (rekomendasi Subway Surfers / Minecraft, §14).
 - ✅ **Tone visual**: **Hybrid** — gameplay di-grade gelap + audio design kuat (§16).
-- ⬜ **Masih terbuka**: cadence posting (brp video/hari), pilihan musik/ambient, dan
-  apakah ide cerita murni LLM atau ada seed dari user (mis. komentar "pengalaman pembaca").
+- ✅ **Cadence**: **1 video/hari** (owner sibuk magang + project Roblox) → workflow harus
+  **low-touch**: scheduler generate 1/hari → preview ke DM → approve 1-tap. Opsi AFK
+  auto-publish utk konten SAFE (pola scheduler Threads, timeout 5 mnt) biar gak nyangkut.
+- 🟡 **Default sementara (bisa diubah)**:
+  - **Musik/ambient**: di-kurasi dari sumber bebas-royalti (YouTube Audio Library, Pixabay,
+    Freesound CC0). Aku siapin rekomendasi pas Fase 1.
+  - **Ide cerita**: murni LLM + topic-variety guard + batasan §13. Seed manual (mis.
+    "pengalaman pembaca" dari komentar) ditambah belakangan via command opsional.
+
+> 💡 **Bonus footage**: karena owner bikin **game Roblox sendiri**, gameplay-nya bisa
+> dipakai sebagai background (100% milik sendiri, aman Content ID) sekaligus **promosi
+> game**-nya. Tinggal rekam mode horror/gelap dari game itu.
 
 ## 16. Horror treatment — bikin gameplay terang jadi mencekam
 
