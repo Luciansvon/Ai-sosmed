@@ -40,6 +40,17 @@ rapuh di free tier.
 > terisolasi `tts_worker.py` biar VRAM dilepas & crash CUDA gak menular). Kalau GPU gak
 > tersedia, pipeline otomatis turun ke **edge-tts** (tanpa GPU).
 
+### Catatan hardware (target: RTX 3050 Laptop, 4GB VRAM)
+- **Durasi total bukan beban VRAM.** F5-TTS memecah teks per kalimat jadi chunk pendek
+  (~10–30 dtk), render satu-satu, lalu disambung. VRAM yang dipakai = ukuran 1 chunk,
+  bukan total durasi → narasi 1–2 menit tetap aman.
+- **Aman di 4GB karena:** (1) subprocess `tts_worker.py` lepas VRAM tiap selesai;
+  (2) F5 dan `faster-whisper` jalan **bergantian**, gak barengan; (3) LLM di cloud
+  (OpenRouter), gak makan VRAM lokal; (4) fallback edge-tts kalau OOM.
+- **Harga utama = waktu, bukan kapasitas.** Di 3050, narasi 1–2 menit ≈ 1–3 menit
+  kompute (chunked). Karena ada approval gate (non-realtime), ini dapat diterima.
+- **Mitigasi OOM:** batasi panjang chunk per kalimat (default F5) + fp16.
+
 ⚠️ **Hak cipta footage**: pakai gameplay **milik sendiri** atau pack **no-copyright**
 (banyak "Minecraft parkour no copyright" / "gameplay for editing"). Jangan pakai video
 orang sembarangan — bisa kena Content ID YouTube. File disimpan user di `assets/gameplay/`.
