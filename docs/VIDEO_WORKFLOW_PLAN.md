@@ -76,7 +76,8 @@ core/ (lanjutan — port dari BIMA_CORE)
   tts.py                 # PORT: wrapper TTS (F5-TTS utama, edge-tts fallback) → narasi.wav
   tts_worker.py          # PORT: subprocess F5-TTS terisolasi (lepas VRAM, aman dari crash CUDA)
 tools/
-  story_gen.py           # naskah horror via LLM (hook 3 dtk pertama, ending nge-twist)
+  trend_research.py      # scraping referensi (XReach/Jina/Serper) → ekstrak tema/elemen (bukan teks)
+  story_gen.py           # naskah horror orisinal via LLM (seed bank + folklore + elemen riset)
   subtitle.py            # faster-whisper align narasi → word/segment timing → .ass burn-in
   gameplay_bg.py         # pilih footage acak, potong sepanjang narasi, crop center 9:16
   video_assembly.py      # ffmpeg: horror-grade bg + subtitle + narasi + ambient → MP4 9:16
@@ -370,8 +371,8 @@ Reference clip buat voice clone narator horror (`assets/voice/`):
   Scheduler: ~1/hari tapi **skip 1–2 hari/minggu** (acak/akhir pekan). Workflow **low-touch**:
   generate → preview ke DM → approve 1-tap. Opsi AFK auto-publish utk konten SAFE
   (pola scheduler Threads, timeout 5 mnt) biar gak nyangkut.
-- ✅ **Sumber cerita**: LLM ngarang **orisinal** dari **seed bank** (premis) + **folklore
-  Indonesia** (public domain). Submission penonton ditambah belakangan. Detail §17.
+- ✅ **Sumber cerita**: LLM ngarang **orisinal** dari **seed bank** + **folklore** +
+  **reference scraping** (ambil tren/elemen, bukan teks; tools BIMA_CORE). Detail §17.
 - 🟡 **Default sementara (bisa diubah)**:
   - **Musik/ambient**: di-kurasi dari sumber bebas-royalti (YouTube Audio Library, Pixabay,
     Freesound CC0). Aku siapin rekomendasi pas Fase 1.
@@ -437,9 +438,29 @@ mentah/inspirasi yang di-LLM jadi cerita baru — **bukan** menyalin karya orang
 3. **Submission penonton ("pengalaman pembaca").** Via komentar/DM/Form → seed orisinal +
    engagement tinggi. Butuh basis penonton dulu → **fase lanjut** (command/intake opsional).
 
+### Reference scraping (riset tren — transformatif, BUKAN copas)
+Bot boleh **scraping sebagai referensi** untuk tahu tren & elemen yang lagi works,
+**asal ambil level IDE, bukan teks**:
+- ✅ Ekstrak **tema naik, setting populer, pola hook, detail folklore** (high-level).
+- ✅ **Buang teks asli** → `story_gen` nulis fresh dari elemen itu + seed bank + folklore.
+- ⚠️ JANGAN kasih teks cerita orang utuh ke LLM untuk "ditulis ulang" → risiko parafrase
+  derivatif yang tetap dianggap nyalin.
+
+Alur:
+```
+[Riset] scraping → ekstrak elemen (tema/setting/hook), buang teks
+   + [seed bank + folklore]
+   → story_gen → cerita ORISINAL → Deslop → cek kemiripan thd sumber (opsional)
+```
+
+**Tools (port dari BIMA_CORE, sudah ada):** XReach (Twitter/X via agent-reach + RapidAPI),
+Jina Reader (web→markdown bersih), Serper (`SERPER_API_KEY` sudah dipakai proyek ini).
+**Pengaman:** cek similarity output vs sumber biar jaga jarak (hindari near-duplicate).
+
 ### Yang DILARANG jadi sumber langsung
-❌ Thread Twitter/X (mis. gaya SimpleMan/KKN), Reddit r/nosleep, creepypasta berhak cipta.
-Boleh untuk inspirasi tema, **tidak boleh disalin** (risiko strike + tolak monetisasi).
+❌ Thread Twitter/X (mis. gaya SimpleMan/KKN), Reddit r/nosleep, creepypasta berhak cipta —
+**disalin/diparafrase**. Boleh untuk **referensi elemen/tema**, tidak boleh disalin
+(risiko strike + tolak monetisasi).
 
 ### Jaga variasi & anti-slop
 - **Topic-variety guard** (pola `threads_recent_topics.json`): catat seed/subjek terpakai,
