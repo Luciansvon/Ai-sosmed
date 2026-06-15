@@ -1,4 +1,4 @@
-"""LLM config ramping buat Bot_thread.
+"""LLM config ramping buat Ai-sosmed.
 
 Pakai OpenRouter lewat langchain `ChatOpenAI`. Dipisah dari BIMA_CORE biar bot ini
 mandiri — cuma expose yang dibutuhin modul Threads: `get_langchain_llm()` + `default_llm`.
@@ -11,7 +11,7 @@ from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
-logger = logging.getLogger("bot_thread.llm")
+logger = logging.getLogger("ai_sosmed.llm")
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"

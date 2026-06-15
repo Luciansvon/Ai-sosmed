@@ -1,4 +1,4 @@
-# Bot_thread (Ai-sosmed) — standalone Threads autoposter bot
+# Ai-sosmed — standalone Threads autoposter bot
 # Python 3.10+ (dipakai/diuji di 3.12)
 
 # Discord control & approval layer

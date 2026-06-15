@@ -1,4 +1,4 @@
-"""Discord wiring buat Bot_thread (Ai-sosmed).
+"""Discord wiring buat Ai-sosmed.
 
 Layer kontrol/approval khusus Threads — di-extract dari BIMA_CORE `core/discord_bot.py`,
 dibuang semua hal non-Threads (saham, arsip, qc, music, langgraph, dll).
@@ -25,7 +25,7 @@ from core.permission_gate import (
 )
 from core.threads_scheduler import start_threads_scheduler
 
-logger = logging.getLogger("bot_thread")
+logger = logging.getLogger("ai_sosmed")
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
@@ -51,7 +51,7 @@ _discord_approval_messages: dict[int, tuple] = {}
 
 def _build_startup_embed() -> discord.Embed:
     embed = discord.Embed(
-        title="🧵 Bot_thread — Online",
+        title="🧵 Ai-sosmed — Online",
         description=(
             "Bot autoposter Threads aktif.\n"
             "Ketik `!threads` buat liat tren, atau `!threads <topik>` buat nulis draf."
@@ -76,7 +76,7 @@ def _build_startup_embed() -> discord.Embed:
 @client.event
 async def on_ready():
     global _startup_notified
-    logger.info(f"🧵 Bot_thread online sebagai {client.user}!")
+    logger.info(f"🧵 Ai-sosmed online sebagai {client.user}!")
 
     # Register main loop buat permission gate (dipanggil dari thread scheduler/tool)
     set_main_loop(asyncio.get_running_loop())

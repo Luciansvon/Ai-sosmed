@@ -1,4 +1,4 @@
-# 🧵 Bot_thread (Ai-sosmed)
+# 🧵 Ai-sosmed
 
 Bot autoposter **Threads** mandiri dengan persona Gen-Z + approval lewat **Discord**.
 Di-extract dari proyek BIMA_CORE biar bisa jalan & di-ulik sendiri.
@@ -53,7 +53,7 @@ Set `ENABLE_THREADS_AUTO=false` buat matiin scheduler (manual `!threads` doang).
 ## Struktur
 
 ```
-Bot_thread/
+Ai-sosmed/
 ├── main.py                  # entry point
 ├── bot.py                   # Discord wiring (approval gate, reaction, revisi)
 ├── core/

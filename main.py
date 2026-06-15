@@ -1,4 +1,4 @@
-"""Entry point Bot_thread (Ai-sosmed).
+"""Entry point Ai-sosmed.
 
 Jalankan:  python main.py
 Pastikan `.env` udah diisi (lihat `.env.example`).
@@ -24,7 +24,7 @@ def _setup_logging() -> None:
 def main() -> None:
     load_dotenv()
     _setup_logging()
-    logging.getLogger("bot_thread").info("Booting Bot_thread...")
+    logging.getLogger("ai_sosmed").info("Booting Ai-sosmed...")
     from bot import run_bot
     run_bot()
 

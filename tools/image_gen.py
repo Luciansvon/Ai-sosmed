@@ -14,7 +14,7 @@ import os
 import time
 from pathlib import Path
 
-logger = logging.getLogger("bot_thread.image_gen")
+logger = logging.getLogger("ai_sosmed.image_gen")
 
 _MODEL = os.environ.get("IMAGE_GEN_MODEL", "google/gemini-3.1-flash-image-preview").strip()
 _OUTPUT_DIR = Path(__file__).resolve().parent.parent / "outputs"
