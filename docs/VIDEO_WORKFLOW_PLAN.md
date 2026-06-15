@@ -14,12 +14,13 @@ rapuh di free tier.
 
 | Topik | Pilihan | Konsekuensi |
 |---|---|---|
-| Tema konten | **Horror** (cerita serem / creepypasta, Bahasa Indonesia) | Persona/prompt LLM khusus horror |
-| Visual | **Footage gameplay** sebagai latar (bukan AI video gen) | Gratis, ringan, tanpa GPU |
-| Voiceover | **F5-TTS** (finetune Indo, voice clone) + **edge-tts** fallback | Reuse pipeline BIMA_CORE; F5 butuh GPU/CUDA, edge-tts jalan tanpa GPU |
+| Tema konten | **Horror** — semua sub-genre yang mencekam (urban legend lokal, pengalaman pembaca, creepypasta/misteri, horor psikologis) **dalam batas aman iklan** (§13) | Prompt LLM multi-genre + guardrail konten |
+| Durasi | **Funnel**: 1 naskah induk **long (1–2 mnt)** → turunan **Shorts (<60 dtk)** | Bukan duplikat; Shorts narik, long buat duit (lihat §9b) |
+| Visual | **Footage gameplay** sebagai latar (bukan AI video gen) | Gratis, ringan; **rekam sendiri** (Minecraft) biar 100% aman hak cipta (§14) |
+| Voiceover | **F5-TTS** (finetune Indo, voice clone) + **edge-tts** fallback | Reuse pipeline BIMA_CORE; F5 butuh GPU/CUDA, edge-tts jalan tanpa GPU. Reference voice TBD (§15) |
 | Subtitle | Burn-in sinkron (karaoke-style) | Timing via **faster-whisper** (sudah ada di stack BIMA) — bukan dari word-boundary TTS |
 | Upload | **Auto YouTube, manual TikTok** | YouTube Data API v3; TikTok = file siap |
-| Mulai dari | **Desain dulu** → lalu Fase 1 | Coding bertahap |
+| Mulai dari | **Desain dulu** → Fase 1 (mode **long** dulu, Shorts nyusul) | Coding bertahap |
 
 > Catatan: opsi **AI video generation** (HF Space: Wan2.2 / LTX-2.3) di-arsip sebagai
 > kemungkinan masa depan, bukan jalur utama — lihat §10.
@@ -168,12 +169,17 @@ TTS_RATE=-5%                          # opsional (edge), lebih pelan/mencekam
 WHISPER_MODEL=small                   # faster-whisper buat align timing subtitle
 
 # === BACKGROUND / AUDIO ===
-GAMEPLAY_DIR=assets/gameplay          # folder footage no-copyright milik user
+GAMEPLAY_DIR=assets/gameplay          # folder footage (rekam sendiri, lihat §14)
 AMBIENT_PATH=assets/sfx/ambient.mp3   # ambient horror latar (opsional)
-VIDEO_MAX_SECONDS=58                  # batas aman < 60 dtk
+
+# === DURASI (funnel: long induk → turunan shorts) ===
+VIDEO_MODE=long                       # long (1-2 mnt) | short (<60 dtk, turunan)
+LONG_MAX_SECONDS=120                  # batas mode long
+SHORT_MAX_SECONDS=58                  # batas mode short (aman < 60)
 
 # === STORY ===
-STORY_MAX_WORDS=180                   # batas panjang naskah biar muat < 60 dtk
+STORY_MAX_WORDS_LONG=320              # naskah induk (mode long, ~1-2 mnt)
+STORY_MAX_WORDS_SHORT=150             # turunan shorts (potongan/teaser)
 
 # === YOUTUBE UPLOAD ===
 YOUTUBE_CLIENT_SECRET_FILE=secrets/yt_client_secret.json
@@ -190,16 +196,18 @@ ENABLE_VIDEO_AUTO=false               # true = auto-post video terjadwal
 | Fase | Isi | Bisa dites? |
 |---|---|---|
 | **0** | Scaffolding modul + dependensi + dokumen ini | — |
-| **1** | `story_gen → tts → subtitle → gameplay_bg → assembly` = MP4 lokal (tanpa upload) | ✅ lokal; F5-TTS butuh GPU (atau pakai edge-tts) |
+| **1** | `story_gen → tts → subtitle → gameplay_bg → assembly` = MP4 **mode long** lokal (tanpa upload) | ✅ lokal; F5-TTS butuh GPU (atau pakai edge-tts) |
+| **1b** | Turunan **mode short** (potong klimaks / teaser cliffhanger dari naskah induk) | ✅ |
 | **2** | Integrasi `!horror <ide>` + approval gate (preview MP4 ke DM) | ✅ butuh Discord |
-| **3** | YouTube auto-upload (OAuth + upload Shorts) | ✅ butuh GCloud OAuth |
+| **3** | YouTube auto-upload (OAuth + upload, long & Shorts) | ✅ butuh GCloud OAuth |
 | **4** | Scheduler auto-post + handoff TikTok manual (notif file siap) | ✅ |
 
-**Rekomendasi:** mulai **Fase 1**. Output langsung kelihatan (MP4 jadi), dependensi minim,
-dan bisa diiterasi (kualitas subtitle, ducking audio, pacing) sebelum nyentuh upload.
+**Rekomendasi:** mulai **Fase 1 mode long** (yang monetizable + syarat TikTok), baru
+tambah turunan Shorts (1b). Output langsung kelihatan (MP4 jadi), bisa diiterasi
+(kualitas subtitle, ducking audio, pacing) sebelum nyentuh upload.
 
-> Prasyarat Fase 1 dari user: taruh minimal 1 file gameplay no-copyright di
-> `assets/gameplay/` (mis. `minecraft_parkour_01.mp4`).
+> Prasyarat Fase 1 dari user: taruh minimal 1 file gameplay **rekaman sendiri** di
+> `assets/gameplay/` (lihat §14) + 1 reference voice di `assets/voice/` (lihat §15).
 
 ## 9. Risiko & mitigasi
 
@@ -292,7 +300,76 @@ posting tiap hari (dan tujuannya monetisasi), kuotanya cepat habis dan aturannya
 utama + **edge-tts** fallback. Kalau mau tanpa GPU & kualitas tinggi: **Azure free tier**
 opsi terbaik kedua. Semua bisa dipasang via `TTS_PROVIDER` tanpa ubah pipeline lain.
 
+## 13. Batasan konten (content boundary) — wajib
+
+Tema = **semua sub-genre horror yang mencekam, TAPI dalam batas aman iklan**. Ini jadi
+guardrail di prompt `story_gen` + filter terakhir di approval gate Discord.
+
+✅ **BOLEH** (serem tapi advertiser-friendly): supernatural (hantu/jin/mistis), urban
+legend lokal (pocong, kuntilanak, tuyul, jelangkung), suspense & paranoia, horor
+psikologis, analog/liminal horror, tempat angker, jumpscare wajar, atmosfer mencekam,
+cerita pengalaman pembaca.
+
+❌ **HINDARI** (pembunuh monetisasi / age-restriction 18+):
+- gore / darah eksplisit, mutilasi
+- kekerasan nyata / kejadian tragis nyata
+- **bunuh diri / self-harm**
+- menyakiti anak
+- konten seksual / pelecehan
+- orang nyata yang bisa diidentifikasi (nama/wajah)
+- kekejaman ekstrem, hate, sara
+
+> Prinsip: takutnya dari **atmosfer & psikologi**, bukan dari gore. Implementasi: daftar
+> larangan dimasukkan ke system prompt `story_gen`, plus pengecekan kata kunci sebelum
+> kirim ke approval gate.
+
+## 14. Sumber footage gameplay
+
+**Aturan utama: REKAM SENDIRI.** Label "no copyright" di YouTube sering palsu (uploader
+gak punya hak). Rekam sekali 15–30 menit, loop selamanya → 100% aman Content ID +
+dihitung konten orisinal.
+
+Game yang nge-hook (gerak konstan / "satisfying", nahan mata sambil telinga dengerin narasi):
+
+| Game | Kenapa cocok | Catatan |
+|---|---|---|
+| **Subway Surfers** | Endless runner ikonik, retensi tinggi | Mobile, bisa **portrait 9:16** → tanpa crop |
+| **Minecraft parkour** | Gerak mulus, netral, aman | PC; crop tengah 16:9→9:16 |
+| **Roblox – Tower of Hell / obby** | Parkour warna-warni, variatif | Rekam sendiri |
+| **GTA V – ramp/stunt** | Aksi mulus | Rockstar izinkan monetisasi gameplay |
+| **Geometry Dash** | Ritmis, hipnotik | Pas dengan musik ber-beat |
+| **Temple Run** | Endless runner | Mobile, portrait-friendly |
+| **Cluster Truck / Fall Guys** | Absurd & ramai | PC/console |
+| **Going Balls / Hill Climb / Slope** | "Oddly satisfying", simpel | Mobile/web, portrait |
+
+**Rekomendasi:** 🥇 **Subway Surfers** (portrait, tanpa crop, retensi tertinggi) → 🥈
+**Minecraft parkour** → 🥉 **Roblox obby**. Mode mobile portrait paling untung kualitas
+karena gak perlu crop dari 16:9.
+
+> Catatan teknis `gameplay_bg`: kalau footage sudah 9:16 (mobile portrait) → skip crop,
+> langsung scale. Kalau 16:9 → crop tengah vertikal lalu scale ke 1080×1920.
+
+## 15. Spesifikasi reference voice F5-TTS (untuk dicari nanti)
+
+Reference clip buat voice clone narator horror (`assets/voice/`):
+- **Durasi 8–15 detik**, audio **bersih** (tanpa musik/noise/echo), **satu orang**.
+- Nada **rendah, tenang, agak pelan** — gaya pendongeng mencekam, bukan teriak.
+- **Bahasa Indonesia** (cocok dengan finetune `Eempostor/F5-TTS-INDO-FINETUNE-V2`).
+- Sertakan **transkrip akurat** di `assets/voice/narator_horror.txt` (wajib untuk F5).
+- ⚠️ **Etika/legal**: clone **suara sendiri** atau sample berlisensi/bebas-pakai. Jangan
+  clone suara orang terkenal / streamer nyata tanpa izin.
+
+## 11b. Status keputusan (terkunci)
+
+- ✅ **Durasi**: funnel — naskah induk **long (1–2 mnt)** → turunan **Shorts**. Bangun mode long dulu.
+- ✅ **Sub-genre**: semua yang mencekam, dalam batas §13.
+- ✅ **Suara**: F5-TTS voice clone (reference voice dicari nanti, spek §15).
+- ✅ **Footage**: rekam sendiri (rekomendasi Subway Surfers / Minecraft, §14).
+- ⬜ **Masih terbuka**: cadence posting (brp video/hari), pilihan musik/ambient, dan
+  apakah ide cerita murni LLM atau ada seed dari user (mis. komentar "pengalaman pembaca").
+
 ---
-*Setelah Fase 1 disetujui & ada ≥1 file di `assets/gameplay/`, modul `tools/story_gen.py`,
-`tools/tts.py`, `tools/subtitle.py`, `tools/gameplay_bg.py`, dan `tools/video_assembly.py`
-dibuat lebih dulu (tanpa upload) supaya langsung menghasilkan MP4 untuk dites.*
+*Setelah Fase 1 disetujui & ada ≥1 file di `assets/gameplay/` + reference voice di
+`assets/voice/`, modul `tools/story_gen.py`, `core/tts.py`, `tools/subtitle.py`,
+`tools/gameplay_bg.py`, dan `tools/video_assembly.py` dibuat lebih dulu (mode long, tanpa
+upload) supaya langsung menghasilkan MP4 untuk dites.*
